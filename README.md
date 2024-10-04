@@ -1,4 +1,3 @@
-![image](https://github.com/user-attachments/assets/85d884f8-facf-40db-bae5-3b148c6a50e0)
 
 # hacknio
 
