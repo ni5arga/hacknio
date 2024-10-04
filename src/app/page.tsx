@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { fetchTopStories, fetchItemById } from '../../utils/api';
+import { fetchTopStories, fetchItemById } from './utils/api';
 import Link from 'next/link';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/solid'; 
 
@@ -61,7 +61,12 @@ export default function Home() {
                 <Link href={`/story/${story.id}`} className="text-lg font-semibold text-blue-600 hover:underline">
                   {story.title}
                 </Link>
-                <p className="text-sm text-gray-600">by {story.by}</p>
+                <p className="text-sm text-gray-600">
+                  by{' '}
+                  <Link href={`/user/${story.by}`} className="text-blue-500 hover:underline">
+                    {story.by}
+                  </Link>
+                </p>
               </div>
               <p className="text-gray-500 text-sm">
                 {story.score} points | {new Date(story.time * 1000).toLocaleDateString()}
