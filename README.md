@@ -1,8 +1,12 @@
-
+![image](https://github.com/user-attachments/assets/85d884f8-facf-40db-bae5-3b148c6a50e0)
 
 # hacknio
 
 hacknio is a minimal hackernews client built using React and Next.js, this application provides a fast and responsive user experience.
+
+
+![](https://i.imgur.com/fUAP24l.png)
+![](https://i.imgur.com/T5VEr4o.png)
 
 ## Tech Stack
 
