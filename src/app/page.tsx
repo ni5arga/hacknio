@@ -53,6 +53,7 @@ export default function Home() {
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
+    const key = event.key.toLowerCase();
     if (event.key === 'ArrowRight'|| event.key === 'L') {
       handleNextPage();
     } else if (event.key === 'ArrowLeft'|| event.key === 'H') {
