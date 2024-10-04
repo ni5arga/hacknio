@@ -53,9 +53,9 @@ export default function Home() {
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'ArrowRight') {
+    if (event.key === 'ArrowRight'|| event.key === 'L') {
       handleNextPage();
-    } else if (event.key === 'ArrowLeft') {
+    } else if (event.key === 'ArrowLeft'|| event.key === 'H') {
       handlePrevPage();
     }
   };
