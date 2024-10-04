@@ -60,7 +60,7 @@ const CommentComponent = ({ comment }: { comment: Comment }) => {
       <div className="mt-2 text-gray-700" dangerouslySetInnerHTML={{ __html: comment.text }} />
 
       {loadingChildComments ? (
-        <p>Loading child comments...</p>
+        <p className="text-black">Loading child comments...</p>  
       ) : (
         childComments.length > 0 && (
           <ul className="mt-4 pl-6 border-l border-gray-300">
@@ -117,7 +117,7 @@ export default function StoryPage({ params }: { params: { id: string } }) {
       <div className="mt-8">
         <h2 className="text-2xl font-bold">Comments</h2>
         {loadingComments ? (
-          <p>Loading comments...</p>
+          <p className="text-black">Loading comments...</p>  
         ) : (
           <ul className="space-y-6 mt-4">
             {comments.length > 0 ? (
@@ -125,7 +125,7 @@ export default function StoryPage({ params }: { params: { id: string } }) {
                 <CommentComponent key={comment.id} comment={comment} />
               ))
             ) : (
-              null
+              <p>No comments available.</p>  
             )}
           </ul>
         )}
