@@ -46,7 +46,7 @@ const CommentComponent = ({ comment }: { comment: Comment }) => {
   };
 
   if (!isValidComment(comment.text)) {
-    return null;
+    return null; 
   }
 
   return (
@@ -73,7 +73,6 @@ const CommentComponent = ({ comment }: { comment: Comment }) => {
     </li>
   );
 };
-
 
 export default function StoryPage({ params }: { params: { id: string } }) {
   const [story, setStory] = useState<Story | null>(null);
@@ -102,15 +101,16 @@ export default function StoryPage({ params }: { params: { id: string } }) {
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold">{story.title}</h1>
-      <p className="text-sm text-gray-600">
-        by <a href={`/user/${story.by}`} className="text-blue-600 hover:underline">{story.by}</a> | {story.score} points | {new Date(story.time * 1000).toLocaleDateString()}
+      <p className="text-sm text-white-800 font-semibold">
+        by <a href={`/user/${story.by}`} className="text-blue-600 hover:underline">{story.by}</a> | 
+        <span className="text-white-800 font-semibold"> {story.score} points | {new Date(story.time * 1000).toLocaleDateString()}</span>
       </p>
       {story.text && (
         <div className="mt-4" dangerouslySetInnerHTML={{ __html: story.text }} />
       )}
       {story.url && (
         <a href={story.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline mt-4 block">
-          Read more
+          {story.url}
         </a>
       )}
 
@@ -125,7 +125,7 @@ export default function StoryPage({ params }: { params: { id: string } }) {
                 <CommentComponent key={comment.id} comment={comment} />
               ))
             ) : (
-              <p>No comments available.</p>
+              null
             )}
           </ul>
         )}
