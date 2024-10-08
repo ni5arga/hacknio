@@ -36,6 +36,28 @@ To run the project locally, follow these steps:
    http://localhost:3000
    ```
 
+## Use with Docker
+
+To run hacknio using Docker:
+
+1. **Build and start the container:**
+   First, cd into the top directory of the `hacknio` repo.
+
+   Then do...
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+2. **Access the application:**
+   Open your browser and navigate to `http://localhost:3000`
+
+3. **Stop the container:**
+   ```bash
+   docker compose down
+   ```
+
+Note: The default port is 3000. To use a different port, set the `HOST_PORT` environment variable before running docker compose or include the environment variable in an adjacent `.env` file.
 
 ## Contributing
 
