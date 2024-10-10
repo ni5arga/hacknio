@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { fetchTopStories, fetchItemById } from './utils/api';
 import Link from 'next/link';
+import { Triangle, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 type Story = {
   id: number;
@@ -46,6 +47,14 @@ export default function Home() {
     }
   };
 
+  const handleFirstPage = () => {
+    setCurrentPage(1);
+  }
+
+  const handleLastPage = () => {
+    setCurrentPage(totalPages);
+  }
+
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1);
@@ -83,7 +92,7 @@ export default function Home() {
     <div className="container mx-auto">
       {loading ? (
         <div className="flex justify-center items-center my-4 h-32">
-          <p className="text-lg">Loading...</p>
+          <p className="text-lg text-neutral-400">Loading...</p>
         </div>
       ) : (
         <>
@@ -115,9 +124,9 @@ export default function Home() {
                       </Link> <span className="text-neutral-600">|</span>{' '}
                       <Link
                         href={`/story/${story.id}`}
-                        className="text-neutral-400 cursor-pointer"
-                      >
-                        {story.score} points
+                        className="text-neutral-400 inline-flex items-center gap-[2px] cursor-pointer"
+                      >  <Triangle size={13} />
+                        <p> {story.score} points </p>
                       </Link> <span className="text-neutral-600">|</span> {new Date(story.time * 1000).toLocaleDateString()}
                     </p>
                   </div>
@@ -129,23 +138,42 @@ export default function Home() {
           {!loading && (
             <div className="flex justify-center items-center mt-6">
               <button
-                className={`mr-2 p-2 w-12 h-12 rounded-md bg-black text-white ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
+                className={`p-2 mr-2 transition flex justify-center items-center w-12 h-12 rounded-md bg-black text-white ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-neutral-800'
+                  }`}
+                onClick={handleFirstPage}
+                disabled={currentPage === 1}
+              >
+                <ChevronsLeft size={20} />
+              </button>
+              <button
+                className={`p-2 mr-8 transition flex justify-center items-center w-12 h-12 rounded-md bg-black text-white ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-neutral-800'
                   }`}
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
               >
-                {'<'}
+                <ChevronLeft size={20} />
               </button>
               <span className="text-lg font-semibold">
                 {currentPage} / {totalPages}
               </span>
               <button
-                className={`ml-2 p-2 w-12 h-12 rounded-md bg-black text-white ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
+                className={`ml-8 transition p-2 w-12 h-12 flex justify-center items-center rounded-md bg-black text-white ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-neutral-800'
+
                   }`}
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
               >
-                {'>'}
+                <ChevronRight size={20} />
+              </button>
+
+              <button
+                className={`ml-2 transition p-2 w-12 h-12 flex justify-center items-center rounded-md bg-black text-white ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-neutral-800'
+
+                  }`}
+                onClick={handleLastPage}
+                disabled={currentPage === totalPages}
+              >
+                <ChevronsRight size={20} />
               </button>
             </div>
           )}
