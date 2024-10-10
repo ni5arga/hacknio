@@ -125,8 +125,8 @@ export default function StoryPage({ params }: { params: { id: string } }) {
           <ul className="space-y-6 mt-4">
             {comments.length > 0 ? (
               comments.map((comment, j) => {
-                return <div>
-                  <CommentComponent key={comment.id} comment={comment} />
+                return <div key={comment.id} >
+                  <CommentComponent comment={comment} />
                   {j - 1 != comments.length && <div className="my-4 px-2 py-[1px] bg-neutral-900"> </div>}
                 </div>
               })
