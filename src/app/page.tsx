@@ -97,41 +97,44 @@ export default function Home() {
       ) : (
         <>
           <ul className="space-y-6">
-            {stories.map((story) => (
-              <li key={story.id} className="hover:bg-neutral-900 shadow-md p-4 transition">
-                <div className="flex flex-col items-start justify-between">
+            {stories.map((story, j) => (
+              <div key={story.id} >
+                <li className="hover:bg-neutral-900 shadow-md p-4 transition">
+                  <div className="flex flex-col items-start justify-between">
 
-                  <Link
-                    href={story.url || `/story/${story.id}`}
-                    target="_blank"
-                    className="text-lg font-semibold text-white hover:text-orange-400 transition hover:underline"
-                  >
-                    {story.title}
-                  </Link>
-                  <p className="text-sm mt-[5px] mb-3 text-neutral-400">
-                    by{' '}
-                    <Link href={`/user/${story.by}`} className="text-orange-400 transition hover:text-orange-300 underline">
-                      {story.by}
+                    <Link
+                      href={story.url || `/story/${story.id}`}
+                      target="_blank"
+                      className="text-lg font-semibold text-white hover:text-orange-400 transition hover:underline"
+                    >
+                      {story.title}
                     </Link>
-                  </p>
-                  <div>
-                    <p className="text-neutral-400 text-sm">
-                      <Link
-                        href={`/story/${story.id}`}
-                        className="text-orange-400 hover:underline cursor-pointer"
-                      >
-                        {story.kids?.length || 0} comments
-                      </Link> <span className="text-neutral-600">|</span>{' '}
-                      <Link
-                        href={`/story/${story.id}`}
-                        className="text-neutral-400 inline-flex items-center gap-[2px] cursor-pointer"
-                      >  <Triangle size={13} />
-                        <p> {story.score} points </p>
-                      </Link> <span className="text-neutral-600">|</span> {new Date(story.time * 1000).toLocaleDateString()}
+                    <p className="text-sm mt-[5px] mb-3 text-neutral-400">
+                      by{' '}
+                      <Link href={`/user/${story.by}`} className="text-orange-400 transition hover:text-orange-300 underline">
+                        {story.by}
+                      </Link>
                     </p>
+                    <div>
+                      <p className="text-neutral-400 text-sm">
+                        <Link
+                          href={`/story/${story.id}`}
+                          className="text-orange-400 hover:underline cursor-pointer"
+                        >
+                          {story.kids?.length || 0} comments
+                        </Link> <span className="text-neutral-600">|</span>{' '}
+                        <Link
+                          href={`/story/${story.id}`}
+                          className="text-neutral-400 inline-flex items-center gap-[2px] cursor-pointer"
+                        >  <Triangle size={13} />
+                          <p> {story.score} points </p>
+                        </Link> <span className="text-neutral-600">|</span> {new Date(story.time * 1000).toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </li>
+                </li>
+                {(j % 10 != 9) && <div className="my-4 px-2 py-[1px] bg-neutral-900"> </div>}
+              </div>
             ))}
           </ul>
 
