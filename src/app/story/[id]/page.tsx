@@ -46,24 +46,24 @@ const CommentComponent = ({ comment }: { comment: Comment }) => {
   };
 
   if (!isValidComment(comment.text)) {
-    return null; 
+    return null;
   }
 
   return (
-    <li key={comment.id} className="bg-white shadow-md p-4 rounded-lg">
-      <p className="text-sm text-gray-600">
+    <li key={comment.id} className=" transition hover:bg-neutral-900 shadow-md p-4 rounded-lg">
+      <p className="text-sm text-neutral-400">
         <strong>
-          <a href={`/user/${comment.by}`} className="text-blue-600 hover:underline">{comment.by}</a>
+          <a href={`/user/${comment.by}`} className="text-orange-400 transition hover:text-orange-300 hover:underline">{comment.by}</a>
         </strong> | {new Date(comment.time * 1000).toLocaleDateString()}
       </p>
-      
-      <div className="mt-2 text-gray-700" dangerouslySetInnerHTML={{ __html: comment.text }} />
+
+      <div className="mt-2 text-neutral-300 COMMENT" dangerouslySetInnerHTML={{ __html: comment.text }} />
 
       {loadingChildComments ? (
-        <p className="text-black">Loading child comments...</p>  
+        <p className="text-neutral-400 mt-4">Loading child comments...</p>
       ) : (
         childComments.length > 0 && (
-          <ul className="mt-4 pl-6 border-l border-gray-300">
+          <ul className="mt-4 pl-6 border-l border-neutral-800">
             {childComments.map((childComment) => (
               <CommentComponent key={childComment.id} comment={childComment} />
             ))}
@@ -96,36 +96,42 @@ export default function StoryPage({ params }: { params: { id: string } }) {
     getStory();
   }, [params.id]);
 
-  if (!story) return <p>Loading...</p>;
+  if (!story) return <div className="flex justify-center items-center my-4 h-32">
+    <p className="text-lg text-neutral-400">Loading...</p>
+  </div>
+    ;
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold">{story.title}</h1>
-      <p className="text-sm text-white-800 font-semibold">
-        by <a href={`/user/${story.by}`} className="text-blue-600 hover:underline">{story.by}</a> | 
-        <span className="text-white-800 font-semibold"> {story.score} points | {new Date(story.time * 1000).toLocaleDateString()}</span>
+      <h1 className="text-3xl mb-4">{story.title}</h1>
+      <p className="text-sm text-neutral-400">
+        by <a href={`/user/${story.by}`} className="text-orange-400 transition hover:text-orange-300 hover:underline">{story.by}</a> |
+        <span className="text-neutral-400"> {story.score} points | {new Date(story.time * 1000).toLocaleDateString()}</span>
       </p>
       {story.text && (
-        <div className="mt-4" dangerouslySetInnerHTML={{ __html: story.text }} />
+        <div className="mt-4 text-neutral-300 leading-8" dangerouslySetInnerHTML={{ __html: story.text }} />
       )}
       {story.url && (
-        <a href={story.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline mt-4 block">
+        <a href={story.url} target="_blank" rel="noopener noreferrer" className="text-orange-400 transition hover:text-orange-300 underline mt-4 block">
           {story.url}
         </a>
       )}
 
       <div className="mt-8">
-        <h2 className="text-2xl font-bold">Comments</h2>
+        <h2 className="text-xl ">Comments</h2>
         {loadingComments ? (
-          <p className="text-black">Loading comments...</p>  
+          <p className="text-black">Loading comments...</p>
         ) : (
           <ul className="space-y-6 mt-4">
             {comments.length > 0 ? (
-              comments.map((comment) => (
-                <CommentComponent key={comment.id} comment={comment} />
-              ))
+              comments.map((comment, j) => {
+                return <div key={comment.id} >
+                  <CommentComponent comment={comment} />
+                  {j - 1 != comments.length && <div className="my-4 px-2 py-[1px] bg-neutral-900"> </div>}
+                </div>
+              })
             ) : (
-              <p>No comments available.</p>  
+              <p>No comments available.</p>
             )}
           </ul>
         )}

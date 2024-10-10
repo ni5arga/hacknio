@@ -3,8 +3,9 @@
 
 hacknio is a lightweight Hacker News client created with React and Next.js, designed to deliver a fast and responsive user experience. You can navigate between pages using the arrow keys for added convenience!
 
-![](https://i.imgur.com/fUAP24l.png)
-![](https://i.imgur.com/T5VEr4o.png)
+![](https://i.imgur.com/sGCXhz4.png)
+![](https://i.imgur.com/aT1prKp.png)
+![](https://i.imgur.com/0pIGR0k.png)
 
 ## Tech Stack
 
