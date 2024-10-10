@@ -53,9 +53,9 @@ export default function Home() {
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === 'ArrowRight'|| event.key === 'L') {
+    if (event.key === 'ArrowRight' || event.key === 'L') {
       handleNextPage();
-    } else if (event.key === 'ArrowLeft'|| event.key === 'H') {
+    } else if (event.key === 'ArrowLeft' || event.key === 'H') {
       handlePrevPage();
     }
   };
@@ -80,18 +80,7 @@ export default function Home() {
   }, [loading]);
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl text-left">hacknio</h1>
-        <Link 
-          href="https://github.com/ni5arga/hacknio" 
-          target="_blank" 
-          className="text-1xl" 
-        >
-          github
-        </Link>
-      </div>
-
+    <div className="container mx-auto">
       {loading ? (
         <div className="flex justify-center items-center my-4 h-32">
           <p className="text-lg">Loading...</p>
@@ -100,35 +89,36 @@ export default function Home() {
         <>
           <ul className="space-y-6">
             {stories.map((story) => (
-              <li key={story.id} className="bg-white shadow-md p-4 rounded-lg">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <Link 
-                      href={story.url || `/story/${story.id}`} 
-                      target="_blank"
-                      className="text-lg font-semibold text-blue-600 hover:underline"
-                    >
-                      {story.title}
+              <li key={story.id} className="hover:bg-neutral-900 shadow-md p-4 transition">
+                <div className="flex flex-col items-start justify-between">
+
+                  <Link
+                    href={story.url || `/story/${story.id}`}
+                    target="_blank"
+                    className="text-lg font-semibold text-white hover:text-orange-400 transition hover:underline"
+                  >
+                    {story.title}
+                  </Link>
+                  <p className="text-sm mt-[5px] mb-3 text-neutral-400">
+                    by{' '}
+                    <Link href={`/user/${story.by}`} className="text-orange-400 transition hover:text-orange-300 underline">
+                      {story.by}
                     </Link>
-                    <p className="text-sm text-gray-600">
-                      by{' '}
-                      <Link href={`/user/${story.by}`} className="text-blue-500 hover:underline">
-                        {story.by}
-                      </Link>
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      <Link 
-                        href={`/story/${story.id}`} 
-                        className="font-bold text-blue-600 hover:underline cursor-pointer"
+                  </p>
+                  <div>
+                    <p className="text-neutral-400 text-sm">
+                      <Link
+                        href={`/story/${story.id}`}
+                        className="text-orange-400 hover:underline cursor-pointer"
                       >
                         {story.kids?.length || 0} comments
-                      </Link> |{' '}
-                      <Link 
-                        href={`/story/${story.id}`} 
-                        className="text-gray-500 cursor-pointer"
+                      </Link> <span className="text-neutral-600">|</span>{' '}
+                      <Link
+                        href={`/story/${story.id}`}
+                        className="text-neutral-400 cursor-pointer"
                       >
                         {story.score} points
-                      </Link> | {new Date(story.time * 1000).toLocaleDateString()}
+                      </Link> <span className="text-neutral-600">|</span> {new Date(story.time * 1000).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -139,9 +129,8 @@ export default function Home() {
           {!loading && (
             <div className="flex justify-center items-center mt-6">
               <button
-                className={`mr-2 p-2 w-12 h-12 rounded-md bg-black text-white ${
-                  currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
-                }`}
+                className={`mr-2 p-2 w-12 h-12 rounded-md bg-black text-white ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
+                  }`}
                 onClick={handlePrevPage}
                 disabled={currentPage === 1}
               >
@@ -151,9 +140,8 @@ export default function Home() {
                 {currentPage} / {totalPages}
               </span>
               <button
-                className={`ml-2 p-2 w-12 h-12 rounded-md bg-black text-white ${
-                  currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
-                }`}
+                className={`ml-2 p-2 w-12 h-12 rounded-md bg-black text-white ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-800'
+                  }`}
                 onClick={handleNextPage}
                 disabled={currentPage === totalPages}
               >
