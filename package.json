@@ -12,6 +12,7 @@
     "@next/font": "^14.2.14",
     "axios": "^1.7.7",
     "flowbite-react": "^0.10.2",
+    "lucide-react": "^0.451.0",
     "next": "14.2.14",
     "react": "^18",
     "react-dom": "^18"

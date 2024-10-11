@@ -25,3 +25,12 @@ body {
     text-wrap: balance;
   }
 }
+
+.COMMENT a {
+  @apply text-orange-400 leading-8 underline;
+}
+
+
+.COMMENT pre {
+  @apply bg-neutral-800 text-wrap p-3 my-4 rounded-md leading-8 ;
+}
