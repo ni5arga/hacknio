@@ -56,7 +56,7 @@ export default function UserProfilePage({ params }: { params: { username: string
       <h1 className="text-xl text-orange-400  mb-4">{user?.id}&apos;s Profile</h1>
       <p><span className="text-neutral-400"> Joined - </span> {user?.created ? formatJoinedDate(user.created) : 'Unknown'}</p>
       <p><span className="text-neutral-400"> Karma  - </span> {user?.karma || 'N/A'}</p>
-      <p><span className="text-neutral-400">vAbout  - </span> {sanitizeAboutText(user?.about)}</p>
+      <p><span className="text-neutral-400"> About  - </span> {sanitizeAboutText(user?.about)}</p>
     </div>
   );
 }
