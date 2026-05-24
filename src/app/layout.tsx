@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${inter.className} p-4 flex justify-center`}>
         <div className=" w-full md:w-4/5 lg:w-1/2">
           <div className="flex p-4 justify-between items-center mb-2">
-            <Link href="/" className="text-2xl text-left">hackn<span className="text-orange-400 font-bold">io</span></Link>
+            <Link href="/" className="text-2xl text-left">hacknio</Link>
             <Link
               href="https://github.com/ni5arga/hacknio"
               target="_blank"

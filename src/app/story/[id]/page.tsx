@@ -3,6 +3,8 @@
 
 import { useEffect, useState } from 'react';
 import { fetchItemById } from '../../utils/api';
+import { relativeTime } from '../../utils/time';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 type Comment = {
   id: number;
@@ -26,6 +28,7 @@ type Story = {
 const CommentComponent = ({ comment }: { comment: Comment }) => {
   const [childComments, setChildComments] = useState<Comment[]>([]);
   const [loadingChildComments, setLoadingChildComments] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     const fetchChildComments = async () => {
@@ -33,7 +36,7 @@ const CommentComponent = ({ comment }: { comment: Comment }) => {
         const loadedChildComments = await Promise.all(
           comment.kids.map((kidId: number) => fetchItemById(kidId))
         );
-        setChildComments(loadedChildComments);
+        setChildComments(loadedChildComments.filter(Boolean));
       }
       setLoadingChildComments(false);
     };
@@ -49,26 +52,47 @@ const CommentComponent = ({ comment }: { comment: Comment }) => {
     return null;
   }
 
+  const childCount = comment.kids?.length || 0;
+
   return (
     <li key={comment.id} className=" transition hover:bg-neutral-900 shadow-md p-4 rounded-lg">
-      <p className="text-sm text-neutral-400">
+      <p className="text-sm text-neutral-400 flex items-center gap-1">
+        <button
+          type="button"
+          onClick={() => setCollapsed((c) => !c)}
+          className="inline-flex items-center text-neutral-500 hover:text-orange-400 transition"
+          aria-label={collapsed ? 'Expand thread' : 'Collapse thread'}
+        >
+          {collapsed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
+        </button>
         <strong>
-          <a href={`/user/${comment.by}`} className="text-orange-400 transition hover:text-orange-300 hover:underline">{comment.by}</a>
-        </strong> | {new Date(comment.time * 1000).toLocaleDateString()}
+          {comment.by ? (
+            <a href={`/user/${comment.by}`} className="text-orange-400 transition hover:text-orange-300 hover:underline">{comment.by}</a>
+          ) : (
+            <span className="text-neutral-500">unknown</span>
+          )}
+        </strong> | {relativeTime(comment.time)}
+        {collapsed && childCount > 0 && (
+          <span className="text-neutral-500"> | [{childCount} {childCount === 1 ? 'reply' : 'replies'} hidden]</span>
+        )}
       </p>
 
-      <div className="mt-2 text-neutral-300 COMMENT" dangerouslySetInnerHTML={{ __html: comment.text }} />
+      {!collapsed && (
+        <>
+          <div className="mt-2 text-neutral-300 COMMENT" dangerouslySetInnerHTML={{ __html: comment.text }} />
 
-      {loadingChildComments ? (
-        <p className="text-neutral-400 mt-4">Loading child comments...</p>
-      ) : (
-        childComments.length > 0 && (
-          <ul className="mt-4 pl-6 border-l border-neutral-800">
-            {childComments.map((childComment) => (
-              <CommentComponent key={childComment.id} comment={childComment} />
-            ))}
-          </ul>
-        )
+          {loadingChildComments ? (
+            childCount > 0 && <p className="text-neutral-400 mt-4">Loading child comments...</p>
+          ) : (
+            childComments.length > 0 && (
+              <ul className="mt-4 pl-6 border-l border-neutral-800">
+                {childComments.map((childComment) => (
+                  <CommentComponent key={childComment.id} comment={childComment} />
+                ))}
+              </ul>
+            )
+          )}
+        </>
       )}
     </li>
   );
@@ -118,7 +142,7 @@ export default function StoryPage({ params }: { params: { id: string } }) {
         ) : (
           <span className="text-neutral-500">unknown</span>
         )} |
-        <span className="text-neutral-400"> {story.score ?? 0} points | {new Date(story.time * 1000).toLocaleDateString()}</span>
+        <span className="text-neutral-400"> {story.score ?? 0} points | {relativeTime(story.time)}</span>
       </p>
       {story.text && (
         <div className="mt-4 text-neutral-300 leading-8" dangerouslySetInnerHTML={{ __html: story.text }} />

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { fetchStoryIds, fetchItemById, StoryType } from './utils/api';
+import { relativeTime } from './utils/time';
 import Link from 'next/link';
 import { Triangle, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
@@ -19,6 +20,8 @@ const SORT_TABS: { key: StoryType; label: string }[] = [
   { key: 'top', label: 'Top' },
   { key: 'new', label: 'New' },
   { key: 'show', label: 'Show' },
+  { key: 'ask', label: 'Ask' },
+  { key: 'job', label: 'Jobs' },
 ];
 
 export default function Home() {
@@ -103,15 +106,15 @@ export default function Home() {
 
   return (
     <div className="container mx-auto">
-      <div className="flex gap-2 px-4 mb-4">
+      <div className="flex flex-wrap gap-4 px-4 mb-4 text-sm">
         {SORT_TABS.map((tab) => (
           <button
             key={tab.key}
             onClick={() => handleSortChange(tab.key)}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition ${
+            className={`transition hover:text-orange-400 ${
               sortType === tab.key
-                ? 'bg-orange-400 text-black'
-                : 'bg-neutral-900 text-neutral-300 hover:bg-neutral-800'
+                ? 'text-orange-400 underline underline-offset-4'
+                : 'text-neutral-400'
             }`}
           >
             {tab.label}
@@ -161,7 +164,7 @@ export default function Home() {
                           className="text-neutral-400 inline-flex items-center gap-[2px] cursor-pointer"
                         >  <Triangle size={13} />
                           <p> {story.score} points </p>
-                        </Link> <span className="text-neutral-600">|</span> {new Date(story.time * 1000).toLocaleDateString()}
+                        </Link> <span className="text-neutral-600">|</span> {relativeTime(story.time)}
                       </p>
                     </div>
                   </div>

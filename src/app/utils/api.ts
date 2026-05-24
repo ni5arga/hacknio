@@ -1,11 +1,13 @@
 // utils/api.ts
 
-export type StoryType = 'top' | 'new' | 'show';
+export type StoryType = 'top' | 'new' | 'show' | 'ask' | 'job';
 
 const STORY_ENDPOINTS: Record<StoryType, string> = {
   top: 'topstories',
   new: 'newstories',
   show: 'showstories',
+  ask: 'askstories',
+  job: 'jobstories',
 };
 
 export const fetchStoryIds = async (type: StoryType = 'top'): Promise<number[]> => {
