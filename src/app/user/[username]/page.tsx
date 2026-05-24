@@ -4,12 +4,6 @@
 import { useEffect, useState } from 'react';
 import { fetchUserById } from '../../utils/api';
 
-const decodeHtml = (html: string) => {
-  const txt = document.createElement('textarea');
-  txt.innerHTML = html;
-  return txt.value;
-};
-
 type UserProfile = {
   id: string;
   created: number;
@@ -20,15 +14,20 @@ type UserProfile = {
 export default function UserProfilePage({ params }: { params: { username: string } }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userId = params.username;
-        const userData = await fetchUserById(userId);
-        setUser(userData);
-      } catch (error) {
-        console.error('Failed to fetch user:', error);
+        const userData = await fetchUserById(params.username);
+        if (!userData) {
+          setError(true);
+        } else {
+          setUser(userData);
+        }
+      } catch (err) {
+        console.error('Failed to fetch user:', err);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -37,26 +36,41 @@ export default function UserProfilePage({ params }: { params: { username: string
     fetchUser();
   }, [params.username]);
 
-  if (loading) return <div className="flex justify-center items-center my-4 h-32">
-    <p className="text-lg text-neutral-400">Loading...</p>
-  </div>;
+  if (loading) return (
+    <div className="flex justify-center items-center my-4 h-32">
+      <p className="text-lg text-neutral-400">Loading...</p>
+    </div>
+  );
+
+  if (error || !user) return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-xl text-orange-400 mb-2">User not found</h1>
+      <p className="text-neutral-400">
+        No Hacker News user with id <span className="text-neutral-200">{params.username}</span> exists.
+      </p>
+    </div>
+  );
 
   const formatJoinedDate = (timestamp: number) => {
     return new Date(timestamp * 1000).toLocaleDateString();
   };
 
-  const sanitizeAboutText = (aboutText: string | undefined) => {
-    if (!aboutText) return 'Not provided';
-    const decodedText = decodeHtml(aboutText);
-    return decodedText.replace(/<[^>]+>/g, '');
-  };
-
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-xl text-orange-400  mb-4">{user?.id}&apos;s Profile</h1>
-      <p><span className="text-neutral-400"> Joined - </span> {user?.created ? formatJoinedDate(user.created) : 'Unknown'}</p>
-      <p><span className="text-neutral-400"> Karma  - </span> {user?.karma || 'N/A'}</p>
-      <p><span className="text-neutral-400"> About  - </span> {sanitizeAboutText(user?.about)}</p>
+      <h1 className="text-xl text-orange-400 mb-4">{user.id}&apos;s Profile</h1>
+      <p><span className="text-neutral-400"> Joined - </span> {user.created ? formatJoinedDate(user.created) : 'Unknown'}</p>
+      <p><span className="text-neutral-400"> Karma  - </span> {typeof user.karma === 'number' ? user.karma : 'N/A'}</p>
+      <div className="mt-2">
+        <span className="text-neutral-400"> About  - </span>
+        {user.about ? (
+          <div
+            className="mt-2 text-neutral-200 COMMENT [&_p]:mt-3 [&_p:first-child]:mt-0"
+            dangerouslySetInnerHTML={{ __html: user.about }}
+          />
+        ) : (
+          <span> Not provided</span>
+        )}
+      </div>
     </div>
   );
 }

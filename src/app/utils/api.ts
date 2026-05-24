@@ -1,10 +1,21 @@
 // utils/api.ts
 
-export const fetchTopStories = async (): Promise<number[]> => {
-  const response = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty');
-  const data = await response.json();
-  return data;
+export type StoryType = 'top' | 'new' | 'show';
+
+const STORY_ENDPOINTS: Record<StoryType, string> = {
+  top: 'topstories',
+  new: 'newstories',
+  show: 'showstories',
 };
+
+export const fetchStoryIds = async (type: StoryType = 'top'): Promise<number[]> => {
+  const endpoint = STORY_ENDPOINTS[type];
+  const response = await fetch(`https://hacker-news.firebaseio.com/v0/${endpoint}.json?print=pretty`);
+  const data = await response.json();
+  return Array.isArray(data) ? data : [];
+};
+
+export const fetchTopStories = async (): Promise<number[]> => fetchStoryIds('top');
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchItemById = async (id: number): Promise<any> => {

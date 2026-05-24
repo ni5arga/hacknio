@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { fetchTopStories, fetchItemById } from './utils/api';
+import { fetchStoryIds, fetchItemById, StoryType } from './utils/api';
 import Link from 'next/link';
 import { Triangle, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
@@ -15,8 +15,15 @@ type Story = {
   kids?: number[];
 };
 
+const SORT_TABS: { key: StoryType; label: string }[] = [
+  { key: 'top', label: 'Top' },
+  { key: 'new', label: 'New' },
+  { key: 'show', label: 'Show' },
+];
+
 export default function Home() {
   const [stories, setStories] = useState<Story[]>([]);
+  const [sortType, setSortType] = useState<StoryType>('top');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -25,7 +32,7 @@ export default function Home() {
   useEffect(() => {
     const getStories = async () => {
       setLoading(true);
-      const storyIds = await fetchTopStories();
+      const storyIds = await fetchStoryIds(sortType);
       setTotalPages(Math.ceil(storyIds.length / storiesPerPage));
 
       const paginatedStoryIds = storyIds.slice(
@@ -34,12 +41,12 @@ export default function Home() {
       );
 
       const storiesData = await Promise.all(paginatedStoryIds.map((id: number) => fetchItemById(id)));
-      setStories(storiesData);
+      setStories(storiesData.filter((s): s is Story => s && !!s.title));
       setLoading(false);
     };
 
     getStories();
-  }, [currentPage]);
+  }, [currentPage, sortType]);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
@@ -59,6 +66,12 @@ export default function Home() {
     if (currentPage > 1) {
       setCurrentPage((prevPage) => prevPage - 1);
     }
+  };
+
+  const handleSortChange = (type: StoryType) => {
+    if (type === sortType) return;
+    setSortType(type);
+    setCurrentPage(1);
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -90,6 +103,22 @@ export default function Home() {
 
   return (
     <div className="container mx-auto">
+      <div className="flex gap-2 px-4 mb-4">
+        {SORT_TABS.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => handleSortChange(tab.key)}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition ${
+              sortType === tab.key
+                ? 'bg-orange-400 text-black'
+                : 'bg-neutral-900 text-neutral-300 hover:bg-neutral-800'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       {loading ? (
         <div className="flex justify-center items-center my-4 h-32">
           <p className="text-lg text-neutral-400">Loading...</p>
@@ -111,9 +140,13 @@ export default function Home() {
                     </Link>
                     <p className="text-sm mt-[5px] mb-3 text-neutral-400">
                       by{' '}
-                      <Link href={`/user/${story.by}`} className="text-orange-400 transition hover:text-orange-300 underline">
-                        {story.by}
-                      </Link>
+                      {story.by ? (
+                        <Link href={`/user/${story.by}`} className="text-orange-400 transition hover:text-orange-300 underline">
+                          {story.by}
+                        </Link>
+                      ) : (
+                        <span className="text-neutral-500">unknown</span>
+                      )}
                     </p>
                     <div>
                       <p className="text-neutral-400 text-sm">

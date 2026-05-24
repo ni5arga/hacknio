@@ -77,18 +77,20 @@ const CommentComponent = ({ comment }: { comment: Comment }) => {
 export default function StoryPage({ params }: { params: { id: string } }) {
   const [story, setStory] = useState<Story | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [loading, setLoading] = useState(true);
   const [loadingComments, setLoadingComments] = useState(true);
 
   useEffect(() => {
     const getStory = async () => {
       const storyData = await fetchItemById(Number(params.id));
-      setStory(storyData);
+      setStory(storyData ?? null);
+      setLoading(false);
 
-      if (storyData.kids) {
+      if (storyData && storyData.kids) {
         const commentsData = await Promise.all(
           storyData.kids.map((kidId: number) => fetchItemById(kidId))
         );
-        setComments(commentsData);
+        setComments(commentsData.filter(Boolean));
       }
       setLoadingComments(false);
     };
@@ -96,17 +98,27 @@ export default function StoryPage({ params }: { params: { id: string } }) {
     getStory();
   }, [params.id]);
 
-  if (!story) return <div className="flex justify-center items-center my-4 h-32">
+  if (loading) return <div className="flex justify-center items-center my-4 h-32">
     <p className="text-lg text-neutral-400">Loading...</p>
-  </div>
-    ;
+  </div>;
+
+  if (!story) return (
+    <div className="container mx-auto p-6">
+      <h1 className="text-xl text-orange-400 mb-2">Story not found</h1>
+      <p className="text-neutral-400">No item with id <span className="text-neutral-200">{params.id}</span> exists.</p>
+    </div>
+  );
 
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl mb-4">{story.title}</h1>
       <p className="text-sm text-neutral-400">
-        by <a href={`/user/${story.by}`} className="text-orange-400 transition hover:text-orange-300 hover:underline">{story.by}</a> |
-        <span className="text-neutral-400"> {story.score} points | {new Date(story.time * 1000).toLocaleDateString()}</span>
+        by {story.by ? (
+          <a href={`/user/${story.by}`} className="text-orange-400 transition hover:text-orange-300 hover:underline">{story.by}</a>
+        ) : (
+          <span className="text-neutral-500">unknown</span>
+        )} |
+        <span className="text-neutral-400"> {story.score ?? 0} points | {new Date(story.time * 1000).toLocaleDateString()}</span>
       </p>
       {story.text && (
         <div className="mt-4 text-neutral-300 leading-8" dangerouslySetInnerHTML={{ __html: story.text }} />
